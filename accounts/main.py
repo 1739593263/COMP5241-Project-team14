@@ -6,15 +6,15 @@ import Functions as fc
 # 登录页面
 def login_page():
     #数据库准备
-    prepare_state = fc.check_database_and_table()
-    if prepare_state == 0:
-        st.warning("Sorry, there is something wrong with the app, please try it again")
-    else:
-        st.title("Login")
+    st.title("Login")
     
-        email = st.text_input("Please input your email")
-        password = st.text_input("Please input your password", type="password")
-    
+    email = st.text_input("Please input your email")
+    password = st.text_input("Please input your password", type="password")
+
+    # 创建两个并排的列
+    col1, col2 = st.columns(2)
+    # 在第一列中放置第一个按钮
+    with col1:
         if st.button("Login"):
             if email == "" or password == "":
                 st.warning("please input your email or password")
@@ -29,6 +29,7 @@ def login_page():
                 else:
                     st.warning("Sorry for the unexpect error, please try it again.")
                 conn.close()
+    with col2:
         if st.button("Register"):
             # turn to the register page
             st.session_state.page = "register"
@@ -65,7 +66,7 @@ def register_page():
         else:
             # 将数据存入数据库
             conn = fc.connect_DB("CV.db")
-            account_register = {"name":name, "telephone":phone, "email": email, "password":password, "country":country, "type":user_type}
+            account_register = {"id": fc.get_next_id(conn, "ACCOUNTS"), "name":name, "telephone":phone, "email": email, "password":password, "country":country, "type":user_type}
             
             register_result = fc.insert_account(conn,"ACCOUNTS", account_register)
             if register_result == 0:
@@ -91,5 +92,9 @@ def main():
         register_page()
 
 if __name__ == "__main__":
-    main()
+    prepare_state = fc.check_database_and_table()
+    if prepare_state == 0:
+        st.warning("Sorry, there is something wrong with the app, please try it again")
+    else:
+        main()
 

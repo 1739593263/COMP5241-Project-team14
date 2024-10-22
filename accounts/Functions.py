@@ -69,7 +69,7 @@ def insert_account(conn,table_name,account_dict):
     cursor = conn.cursor()
     
     # 检查用户是否存在
-    cursor.execute(f"SELECT * FROM {table_name} WHERE email = '{account_dict["email"]}'")
+    cursor.execute(f"SELECT * FROM {table_name} WHERE email = '{account_dict['email']}'")
     result = cursor.fetchone()
 
     if result:
@@ -77,9 +77,8 @@ def insert_account(conn,table_name,account_dict):
         return 0
     else:
         # 用户不存在，插入新用户
-        sql=f"""INSERT INTO {table_name} VALUE ({account_dict["id"]},{account_dict["name"]},
-            {account_dict["telephone"]},{account_dict["email"]},{account_dict["password"]},
-            {account_dict["country"]},{account_dict["type"]}) """
+        sql=f"""INSERT INTO {table_name} (id, name, telephone, email, password, country, type) VALUES ('{account_dict["id"]}','{account_dict["name"]}','{account_dict["telephone"]}','{account_dict["email"]}','{account_dict["password"]}','{account_dict["country"]}','{account_dict["type"]}') """
+        print(sql)
         cursor.execute(sql)
         conn.commit()
         return 1
@@ -98,5 +97,19 @@ def login_account(conn,table_name,email,password):
     else:
         return 0
 
+#查询最新数据的id
+def get_next_id(conn, table_name):
+    #获取游标
+    cursor = conn.cursor()
+    # 查询当前最大的 ID
+    cursor.execute(f"SELECT MAX(id) FROM {table_name}")
+    result = cursor.fetchone()[0]
 
+    if result is None:
+        # 如果没有记录，返回 '00000001'
+        return '00000001'
+    else:
+        # 计算下一个 ID
+        next_id = int(result) + 1
+        return f"{next_id:08d}"  # 格式化为八位数字
 
