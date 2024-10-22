@@ -20,3 +20,7 @@ CV.db with a table called ACCOUNTS to store account data.
     - id: 00000002
     - email:98765432@163.com
     - password: 98765432
+
+## Environment
+- python 3.12.7
+- streamlit 1.39.0
