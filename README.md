@@ -5,3 +5,18 @@
 CV.db with a table called ACCOUNTS to store account data.
 
 - ACCOUNT: id(int), name(str), telephone(int), email(str), password(str), country(str), type(str)
+
+## Test example
+- pip install -r requirements.txt
+- streamlit run main.py
+- test account:
+  - test1:
+    - name: test1
+    - id: 00000001
+    - email: 12345678@163.com
+    - password: 12345678
+  - test2:
+    - name: test2
+    - id: 00000002
+    - email:98765432@163.com
+    - password: 98765432

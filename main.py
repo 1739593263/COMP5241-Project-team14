@@ -1,6 +1,8 @@
 #database name is CV.db, Table name is ACCOUNTS
 #changing the login successfully code, let it turn to the successfully page
 import streamlit as st
+from streamlit.navigation.page import StreamlitPage
+
 import Accounts.Functions as AF
 
 prepare_state = AF.check_database_and_table()
@@ -25,6 +27,10 @@ else:
                 login_result = AF.login_account(conn, "ACCOUNTS", email, password)
                 if login_result == 1:
                     st.session_state.logged_in = True
+                    if AF.is_employee(conn, "ACCOUNTS", email, password) == "Employee":
+                        st.session_state.is_employee = True
+                    else:
+                        st.session_state.is_employee = False
                     # turning to the app page
                 elif login_result == 0:
                     st.warning("Email or Password is wrong!")
@@ -97,11 +103,20 @@ else:
     logout_page = st.Page(logout, title="Log out", icon=":material/logout:")
 
     if st.session_state.logged_in:
-        pg = st.navigation(
-            {
-                "Account": [logout_page]
-            }
-        )
+        if st.session_state.is_employee:
+            pg = st.navigation(
+                {
+                    "Account": [logout_page],
+                    "Home":[st.Page("Employee/home.py", title="Home page", icon=":material/home:", default = True)]
+                }
+            )
+        else:
+            pg = st.navigation(
+                {
+                    "Account": [logout_page],
+                    "Home":[st.Page("Employer/home.py", title="Home page", icon=":material/home:", default = True)]
+                }
+            )
     else:
         pg = st.navigation([login_page])
 

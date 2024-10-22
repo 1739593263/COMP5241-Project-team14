@@ -113,3 +113,10 @@ def get_next_id(conn, table_name):
         next_id = int(result) + 1
         return f"{next_id:08d}"  # 格式化为八位数字
 
+# 检测是雇员还是雇主
+def is_employee(conn,table_name,email,password):
+    # 获取游标
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT type FROM {table_name} WHERE email = '{email}' AND password = '{password}'")
+    result = cursor.fetchone()
+    return result[0]
